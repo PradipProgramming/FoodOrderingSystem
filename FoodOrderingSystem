@@ -1,0 +1,88 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+class FoodOrderingSystem {
+    
+    private static Map<String, Double> menu = new HashMap<>(); // menu items with prices
+    private static Map<String, Integer> stock = new HashMap<>(); // stock of available items
+    private static List<String> orders = new ArrayList<>(); // orders placed by customers
+    
+    public static void main(String[] args) {
+        // initialize menu items and stock
+        menu.put("Burger", 5.99);
+        menu.put("Fries", 2.99);
+        menu.put("Pizza", 8.99);
+        stock.put("Burger", 10);
+        stock.put("Fries", 20);
+        stock.put("Pizza", 5);
+        
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nWelcome to the Food Ordering System!");
+            System.out.println("1. View Menu");
+            System.out.println("2. Place Order");
+            System.out.println("3. View Orders");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    viewMenu();
+                    break;
+                case 2:
+                    placeOrder(scanner);
+                    break;
+                case 3:
+                    viewOrders();
+                    break;
+                case 4:
+                    System.out.println("Thank you for using the Food Ordering System!");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+    
+    private static void viewMenu() {
+        System.out.println("\nMenu Items:\n");
+        for (Map.Entry<String, Double> entry : menu.entrySet()) {
+            System.out.println(entry.getKey() + " - $" + entry.getValue());
+        }
+    }
+    
+    private static void placeOrder(Scanner scanner) {
+        System.out.println("\nPlace Order:\n");
+        System.out.println("Menu Items:\n");
+        for (Map.Entry<String, Double> entry : menu.entrySet()) {
+            System.out.println(entry.getKey() + " - $" + entry.getValue());
+        }
+        System.out.print("\nEnter item name: ");
+        String item = scanner.next();
+        if (!menu.containsKey(item)) {
+            System.out.println("Invalid item name! Please try again.");
+            return;
+        }
+        System.out.print("Enter quantity: ");
+        int quantity = scanner.nextInt();
+        if (quantity > stock.get(item)) {
+            System.out.println("Insufficient stock! Please try again.");
+            return;
+        }
+        double total = quantity * menu.get(item);
+        orders.add(item + " - " + quantity + " - $" + total);
+        stock.put(item, stock.get(item) - quantity);
+        System.out.println("Order placed successfully!");
+    }
+    
+    private static void viewOrders() {
+        System.out.println("\nOrders Placed:\n");
+        for (String order : orders) {
+            System.out.println(order);
+        }
+    }
+}
